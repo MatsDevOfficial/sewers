@@ -6,8 +6,12 @@
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  color: #e2e8f0;
+  background: linear-gradient(
+    135deg,
+    var(--background-dark) 0%,
+    var(--background-secondary) 100%
+  );
+  color: var(--text-light);
   line-height: 1.6;
 }
 
@@ -20,12 +24,12 @@ body {
   padding: 2rem;
   background: radial-gradient(
       circle at 20% 50%,
-      rgba(255, 255, 255, 0.1) 0%,
+      rgba(var(--text-white-rgb), 0.1) 0%,
       transparent 50%
     ),
     radial-gradient(
       circle at 80% 80%,
-      rgba(101, 100, 105, 0.1) 0%,
+      rgba(var(--neutral-rgb), 0.1) 0%,
       transparent 50%
     );
   position: relative;
@@ -42,13 +46,13 @@ body {
   font-size: clamp(2.5rem, 8vw, 5rem);
   font-weight: 700;
   margin-bottom: 1.5rem;
-  color: #ffffff;
+  color: var(--text-white);
   animation: fadeInUp 0.8s ease-out;
 }
 
 .hero p {
   font-size: clamp(1.1rem, 3vw, 1.5rem);
-  color: #cbd5e1;
+  color: var(--text-medium);
   margin-bottom: 3rem;
   animation: fadeInUp 0.8s ease-out 0.2s both;
 }
@@ -74,36 +78,36 @@ body {
 }
 
 .btn-primary {
-  background: #3b82f6;
-  color: #ffffff;
-  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+  background: var(--primary);
+  color: var(--text-white);
+  box-shadow: 0 10px 30px rgba(var(--primary-rgb), 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 15px 40px rgba(var(--primary-rgb), 0.4);
 }
 
 .btn-secondary {
-  background: rgba(59, 130, 246, 0.1);
-  color: #ffffff;
-  border: 2px solid #3b82f6;
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--text-white);
+  border: 2px solid var(--primary);
 }
 
 .btn-secondary:hover {
-  background: rgba(59, 130, 246, 0.2);
+  background: rgba(var(--primary-rgb), 0.2);
   transform: translateY(-3px);
 }
 
 .footer {
   padding: 3rem 2rem;
   text-align: center;
-  background: rgba(15, 23, 42, 0.8);
-  border-top: 1px solid rgba(59, 130, 246, 0.2);
+  background: rgba(var(--background-dark-rgb), 0.8);
+  border-top: 1px solid rgba(var(--primary-rgb), 0.2);
 }
 
 .footer p {
-  color: #94a3b8;
+  color: var(--text-gray);
   margin-bottom: 0.5rem;
 }
 
@@ -123,12 +127,12 @@ body {
 
 a {
   font-weight: bold;
-  color: white;
+  color: var(--text-white);
   transition: color 0.3s ease;
 }
 
 a:hover {
-  color: #60a5fa;
+  color: var(--primary-hover);
 }
 
 @keyframes fadeInUp {

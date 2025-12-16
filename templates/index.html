@@ -16,6 +16,25 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='rewards.css') }}"
     />
+    <style>
+      :root {
+        --primary: {{ config.colors.primary }};
+        --primary-rgb: {{ config.colors.primary_rgb }};
+        --primary-hover: {{ config.colors.primary_hover }};
+        --primary-hover-rgb: {{ config.colors.primary_hover_rgb }};
+        --background-dark: {{ config.colors.background_dark }};
+        --background-dark-rgb: {{ config.colors.background_dark_rgb }};
+        --background-secondary: {{ config.colors.background_secondary }};
+        --background-secondary-rgb: {{ config.colors.background_secondary_rgb }};
+        --text-white: {{ config.colors.text_white }};
+        --text-white-rgb: {{ config.colors.text_white_rgb }};
+        --text-light: {{ config.colors.text_light }};
+        --text-medium: {{ config.colors.text_medium }};
+        --text-gray: {{ config.colors.text_gray }};
+        --text-dark-gray: {{ config.colors.text_dark_gray }};
+        --neutral-rgb: {{ config.colors.hero_gradial_rgb }};
+      }
+    </style>
   </head>
   <body>
     <a href="https://hackclub.com" target="_blank">

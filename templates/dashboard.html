@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HomeLab</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='base.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='dashboard.css') }}"
+    />
+    <style>
+      :root {
+        --primary: {{ config.colors.primary }};
+        --primary-rgb: {{ config.colors.primary_rgb }};
+        --primary-hover: {{ config.colors.primary_hover }};
+        --primary-hover-rgb: {{ config.colors.primary_hover_rgb }};
+        --background-dark: {{ config.colors.background_dark }};
+        --background-dark-rgb: {{ config.colors.background_dark_rgb }};
+        --background-secondary: {{ config.colors.background_secondary }};
+        --background-secondary-rgb: {{ config.colors.background_secondary_rgb }};
+        --text-white: {{ config.colors.text_white }};
+        --text-white-rgb: {{ config.colors.text_white_rgb }};
+        --text-light: {{ config.colors.text_light }};
+        --text-medium: {{ config.colors.text_medium }};
+        --text-gray: {{ config.colors.text_gray }};
+        --text-dark-gray: {{ config.colors.text_dark_gray }};
+        --neutral-rgb: {{ config.colors.hero_gradial_rgb }};
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/rewards">Profile</a></li>
+      </ul>
+    </nav>
+    {{ name }}
+  </body>
+</html>

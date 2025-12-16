@@ -8,7 +8,7 @@
   font-size: clamp(2rem, 5vw, 3rem);
   text-align: center;
   margin-bottom: 3rem;
-  color: white;
+  color: var(--text-white);
 }
 
 .faq-list {
@@ -18,11 +18,11 @@
 }
 
 .faq-card {
-  background: rgba(30, 41, 59, 0.4);
+  background: rgba(var(--background-secondary-rgb), 0.4);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-radius: 16px;
-  border: 2px solid rgba(59, 130, 246, 0.2);
+  border: 2px solid rgba(var(--primary-rgb), 0.2);
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -47,8 +47,8 @@
 
 .faq-card:hover {
   transform: translateY(-8px) scale(1.01);
-  border-color: rgba(59, 130, 246, 0.6);
-  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(var(--primary-rgb), 0.6);
+  background: rgba(var(--background-secondary-rgb), 0.6);
 }
 
 .faq-question {
@@ -59,7 +59,7 @@
   padding: 1.5rem;
   background: none;
   border: none;
-  color: #ffffff;
+  color: var(--text-white);
   font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
@@ -70,12 +70,12 @@
 }
 
 .faq-question:hover {
-  color: #60a5fa;
+  color: var(--primary-hover);
 }
 
 .faq-question i {
   transition: transform 0.3s ease;
-  color: #cbd5e1;
+  color: var(--text-medium);
 }
 
 .faq-card.open .faq-question i {
@@ -87,7 +87,7 @@
   overflow: hidden;
   transition: max-height 0.4s ease, padding 0.4s ease;
   padding: 0 1.5rem;
-  color: #94a3b8;
+  color: var(--text-gray);
   line-height: 1.6;
   position: relative;
   z-index: 2;

@@ -1,7 +1,7 @@
 .rewards-section {
   width: 100%;
   padding: 6rem 2rem;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(var(--background-dark-rgb), 0.5);
 }
 
 .rewards-container {
@@ -11,7 +11,7 @@
 
 .shop-subtitle {
   text-align: center;
-  color: #94a3b8;
+  color: var(--text-gray);
   font-size: 1.1rem;
   margin-bottom: 3rem;
   line-height: 1.8;
@@ -21,7 +21,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #3b82f6;
+  color: var(--primary);
   font-weight: 600;
   margin-top: 0.5rem;
 }
@@ -49,36 +49,26 @@
 
 .search-container input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 3rem;
+  padding: 0.75rem 1rem;
   border-radius: 12px;
-  border: 2px solid rgba(59, 130, 246, 0.3);
-  background: rgba(30, 41, 59, 0.6);
+  border: 2px solid rgba(var(--primary-rgb), 0.3);
+  background: rgba(var(--background-secondary-rgb), 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color: white;
+  color: var(--text-white);
   font-size: 1rem;
   transition: all 0.3s ease;
 }
 
 .search-container input:focus {
   outline: none;
-  border-color: #3b82f6;
-  background: rgba(30, 41, 59, 0.8);
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary);
+  background: rgba(var(--background-secondary-rgb), 0.8);
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.1);
 }
 
 .search-container input::placeholder {
-  color: #64748b;
-}
-
-.search-icon {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #64748b;
-  pointer-events: none;
-  font-size: 1.1rem;
+  color: var(--text-dark-gray);
 }
 
 .sort-container {
@@ -91,22 +81,22 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #cbd5e1;
+  color: var(--text-medium);
   font-weight: 600;
 }
 
 .sort-container i {
-  color: #3b82f6;
+  color: var(--primary);
 }
 
 .sort-container select {
   padding: 0.75rem 1rem;
   border-radius: 12px;
-  border: 2px solid rgba(59, 130, 246, 0.3);
-  background: rgba(30, 41, 59, 0.6);
+  border: 2px solid rgba(var(--primary-rgb), 0.3);
+  background: rgba(var(--background-secondary-rgb), 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color: white;
+  color: var(--text-white);
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: inherit;
@@ -114,8 +104,8 @@
 
 .sort-container select:focus {
   outline: none;
-  border-color: #3b82f6;
-  background: rgba(30, 41, 59, 0.8);
+  border-color: var(--primary);
+  background: rgba(var(--background-secondary-rgb), 0.8);
 }
 
 .shop-grid {
@@ -137,13 +127,13 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: rgba(30, 41, 59, 0.4);
+  background: rgba(var(--background-secondary-rgb), 0.4);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-radius: 16px;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid rgba(59, 130, 246, 0.2);
+  border: 2px solid rgba(var(--primary-rgb), 0.2);
   position: relative;
 }
 
@@ -166,14 +156,14 @@
 
 .shop-card:hover {
   transform: translateY(-12px) scale(1.02);
-  border-color: rgba(59, 130, 246, 0.6);
-  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(var(--primary-rgb), 0.6);
+  background: rgba(var(--background-secondary-rgb), 0.6);
 }
 
 .shop-card-image {
   width: 100%;
   height: 220px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--text-white-rgb), 0.03);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,17 +208,17 @@
 .shop-card-title {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-white);
   margin-bottom: 0.5rem;
   transition: color 0.3s ease;
 }
 
 .shop-card:hover .shop-card-title {
-  color: #60a5fa;
+  color: var(--primary-hover);
 }
 
 .shop-card-description {
-  color: #94a3b8;
+  color: var(--text-gray);
   font-size: 0.95rem;
   margin-bottom: 1rem;
   flex-grow: 1;
@@ -239,7 +229,7 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 1rem;
-  border-top: 1px solid rgba(59, 130, 246, 0.2);
+  border-top: 1px solid rgba(var(--primary-rgb), 0.2);
   position: relative;
   z-index: 2;
   margin-top: auto;
@@ -251,12 +241,12 @@
   gap: 0.5rem;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #3b82f6;
+  color: var(--primary);
   transition: all 0.3s ease;
 }
 
 .shop-card:hover .shop-card-price {
-  color: #60a5fa;
+  color: var(--primary-hover);
   transform: scale(1.05);
 }
 
@@ -271,7 +261,7 @@
 }
 
 .shop-card-hours {
-  color: #94a3b8;
+  color: var(--text-gray);
   font-size: 0.9rem;
   font-weight: 600;
 }

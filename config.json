@@ -173,5 +173,22 @@
       "image": "assets/Synology4BAY.png",
       "link": "https://google.com"
     }
-  ]
+  ],
+  "colors": {
+    "primary": "#3b82f6",
+    "primary_rgb": "59, 130, 246",
+    "primary_hover": "#60a5fa",
+    "primary_hover_rgb": "96, 165, 250",
+    "background_dark": "#0b0f14",
+    "background_dark_rgb": "11, 15, 20",
+    "background_secondary": "#141b26",
+    "background_secondary_rgb": "20, 27, 38",
+    "text_white": "#ffffff",
+    "text_white_rgb": "255, 255, 255",
+    "text_light": "#e5e7eb",
+    "text_medium": "#d1d5db",
+    "text_gray": "#9ca3af",
+    "text_dark_gray": "#6b7280",
+    "hero_gradial_rgb": "30, 64, 175"
+  }
 }
