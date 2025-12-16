@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HomeLab</title>
+    <title>HomeLab Dashboard</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='base.css') }}"
@@ -40,6 +40,84 @@
         <li><a href="/rewards">Profile</a></li>
       </ul>
     </nav>
-    {{ name }}
+
+    <main class="dashboard-content">
+      <header class="dashboard-header">
+        <h1>Welcome, {{ name }}!</h1>
+        <p>Track your projects and manage your orders.</p>
+      </header>
+
+      <section class="projects-section">
+        <h2>Your Projects</h2>
+        <div class="carousel">
+          <div class="add-card">
+            <div class="add-icon">+</div>
+            <p>Add New Project</p>
+          </div>
+          <div class="project-card">
+            <div class="project-header">
+              <h3>Home Server Setup</h3>
+              <span class="project-status status-pending">Building</span>
+            </div>
+            <p class="project-description">
+              Building a basic home server with Raspberry Pi for file storage
+              and automation.
+            </p>
+            <div class="project-footer">
+              <span class="project-hours">12 hours logged</span>
+              <a href="#" class="btn btn-small">Edit</a>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-header">
+              <h3>Network Monitoring Tool</h3>
+              <span class="project-status status-completed">Shipped</span>
+            </div>
+            <p class="project-description">
+              A web app to monitor network devices and uptime using Python and
+              Flask.
+            </p>
+            <div class="project-footer">
+              <span class="project-hours">8 hours logged</span>
+              <a href="#" class="btn btn-small">View</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- <section class="orders-section">
+        <h2>Your Orders</h2>
+        <div class="carousel">
+          <div class="add-card">
+            <div class="add-icon">+</div>
+            <p>Add New Order</p>
+          </div>
+          <div class="order-card">
+            <div class="order-header">
+              <h3>32GB USB Flash Drive</h3>
+              <span class="order-status status-pending">Pending</span>
+            </div>
+            <p class="order-description">
+              Perfect for booting and installing OS!
+            </p>
+            <div class="order-footer">
+              <span class="order-hours">2 hours spent</span>
+            </div>
+          </div>
+          <div class="order-card">
+            <div class="order-header">
+              <h3>Cable Management Kit</h3>
+              <span class="order-status status-shipped">Shipped</span>
+            </div>
+            <p class="order-description">
+              Keep your setup organized and clean.
+            </p>
+            <div class="order-footer">
+              <span class="order-hours">3 hours spent</span>
+            </div>
+          </div>
+        </div>
+      </section> -->
+    </main>
   </body>
 </html>

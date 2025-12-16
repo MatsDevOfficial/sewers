@@ -22,7 +22,6 @@ TOKEN_URL = 'https://auth.hackclub.com/oauth/token'
 JWKS_URL = 'https://auth.hackclub.com/oauth/discovery/keys'
 USERINFO_URL = 'https://auth.hackclub.com/oauth/userinfo'
 
-
 @app.route('/')
 def home():
     with open('config.json', 'r') as f:

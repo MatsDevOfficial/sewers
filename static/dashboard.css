@@ -18,7 +18,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  overflow-x: hidden;
 }
 
 .navbar {
@@ -51,9 +52,238 @@ body {
   color: var(--primary-hover);
 }
 
+.dashboard-content {
+  width: 100%;
+  margin: 0;
+  padding: 1rem 0.5rem;
+  padding-top: 6rem;
+  box-sizing: border-box;
+}
+
+.dashboard-header {
+  text-align: left;
+  margin-bottom: 2rem;
+  padding-left: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-white);
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+  color: var(--text-gray);
+  font-size: 1.1rem;
+}
+
+.projects-section,
+.orders-section {
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.projects-section h2,
+.orders-section h2 {
+  font-size: 2rem;
+  color: var(--text-white);
+  margin-bottom: 1rem;
+  text-align: left;
+  padding-left: 2rem;
+}
+
+.carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--primary-rgb), 0.3) transparent;
+}
+
+.carousel::-webkit-scrollbar {
+  height: 8px;
+}
+
+.carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.carousel::-webkit-scrollbar-thumb {
+  background: rgba(var(--primary-rgb), 0.3);
+  border-radius: 4px;
+}
+
+.carousel::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--primary-rgb), 0.5);
+}
+
+.add-card {
+  flex-shrink: 0;
+  width: 280px;
+  height: 300px;
+  background: rgba(var(--background-secondary-rgb), 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
+  border: 2px dashed rgba(var(--primary-rgb), 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: var(--text-gray);
+  margin-left: 1rem;
+}
+
+.add-card:hover {
+  border-color: var(--primary);
+  background: rgba(var(--background-secondary-rgb), 0.6);
+  transform: scale(1.05);
+}
+
+.add-icon {
+  font-size: 3rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.add-card p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.project-card,
+.order-card {
+  flex-shrink: 0;
+  width: 280px;
+  height: 300px;
+  background: rgba(var(--background-secondary-rgb), 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 2px solid rgba(var(--primary-rgb), 0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-header,
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.project-header h3,
+.order-header h3 {
+  font-size: 1.3rem;
+  color: var(--text-white);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-status,
+.order-status {
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.status-completed {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--primary);
+}
+
+.status-pending {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+}
+
+.status-shipped {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.project-description,
+.order-description {
+  color: var(--text-gray);
+  margin-bottom: 0.5rem;
+  flex-grow: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.project-footer,
+.order-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(var(--primary-rgb), 0.2);
+}
+
+.project-hours,
+.order-hours {
+  color: var(--text-gray);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background: var(--primary);
+  color: var(--text-white);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.btn-small:hover {
+  background: var(--primary-hover);
+}
+
 @media (max-width: 768px) {
-  .navbar ul {
-    flex-direction: column;
+  .dashboard-content {
+    padding: 1rem 0.5rem;
+    padding-top: 5rem;
+  }
+
+  .carousel {
     gap: 1rem;
+    padding: 0.5rem 0;
+  }
+
+  .add-card,
+  .project-card,
+  .order-card {
+    width: 250px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+
+  .projects-section h2,
+  .orders-section h2 {
+    font-size: 1.5rem;
   }
 }
