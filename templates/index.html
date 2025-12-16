@@ -3,15 +3,750 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YSWS Template</title>
+    <title>HomeLab</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
     />
   </head>
   <body>
-    <div class="container">
-      <h1>YSWS Site</h1>
-    </div>
+    <a href="https://hackclub.com" target="_blank">
+      <img
+        src="{{ url_for('static', filename='flag-orpheus-left.png') }}"
+        alt="Hack Club Flag"
+        class="hack-club-flag"
+      />
+    </a>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>{{ config.home.title }}</h1>
+        <p>{{ config.home.description }}</p>
+        <div class="hero-buttons">
+          <a href="#rewards" class="btn btn-secondary">Rewards</a>
+
+          {% if config.mode == "rsvp" %}
+          <a
+            href="{{ config.rsvp }}"
+            class="btn btn-primary"
+            target="_blank"
+            rel="noopener"
+            >RSVP</a
+          >
+          {% elif config.mode == "active" %}
+          <a href="/dashboard" class="btn btn-primary">Get Started</a>
+          {% endif %}
+          <a href="#faqs" class="btn btn-secondary">FAQs</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section" id="faqs">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-list">
+        {% for question, answer in config.faqs.items() %}
+        <div class="faq-item">
+          <h3 class="faq-question">{{ question }}</h3>
+          <p class="faq-answer">
+            {{ answer | replace('\n', '<br />') | safe }}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="rewards-section" id="rewards">
+      <div class="rewards-container">
+        <h2 class="section-title">Rewards Shop</h2>
+        <p class="shop-subtitle">
+          Earn hours by building projects and spend them on hardware for your
+          homelab!<br />
+          <span class="currency-note"
+            >1 hour = 10
+            <img
+              src="assets/lancurrency.png"
+              alt="ethernet"
+              class="currency-icon"
+            />
+            ethernet cables</span
+          >
+        </p>
+
+        <div class="shop-controls">
+          <div class="search-container">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search for items..."
+              oninput="searchItems()"
+            />
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          </div>
+          <div class="sort-container">
+            <div class="sort-label-wrapper">
+              <i class="fa-solid fa-filter"></i>
+              <label for="sort-select">Sort by:</label>
+            </div>
+            <select id="sort-select" onchange="sortRewards()">
+              <option value="asc">Hours: Low to High</option>
+              <option value="desc">Hours: High to Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="shop-grid" id="shop-grid">
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/serverack.png" alt="Server Rack" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">Used Server Rack Grant</h3>
+                <p class="shop-card-description">No Limits!</p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price grant-price">$5 Grant</div>
+                  <div class="shop-card-hours">1 hour</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/Cat6.png" alt="CAT6 Cable" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">3x CAT6 1m Cable</h3>
+                <p class="shop-card-description">you can never have enough!</p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>10</span>
+                  </div>
+                  <div class="shop-card-hours">1 hour</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/32GB.png" alt="32GB USB Flash Drive" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">32gb USB Flash Drive</h3>
+                <p class="shop-card-description">
+                  perfect for booting and installing OS!
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>20</span>
+                  </div>
+                  <div class="shop-card-hours">2 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img
+                  src="assets/CableMngmtKit.png"
+                  alt="Cable Management Kit"
+                />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">Cable Management Kit</h3>
+                <p class="shop-card-description">
+                  Keep your setup organized and clean
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>30</span>
+                  </div>
+                  <div class="shop-card-hours">3 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/TL-SG108.png" alt="TL-SG108 Network Switch" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">TL-SG108 Network Switch</h3>
+                <p class="shop-card-description">
+                  8-port Gigabit switch for your network
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>40</span>
+                  </div>
+                  <div class="shop-card-hours">4 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img
+                  src="assets/TP-Link2.5GB.png"
+                  alt="TP-Link TX201 2.5Gb Network Card"
+                />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">
+                  TP-Link 2.5Gb PCIe Network Card (TX201)
+                </h3>
+                <p class="shop-card-description">
+                  Upgrade your server to 2.5Gb networking
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>60</span>
+                  </div>
+                  <div class="shop-card-hours">6 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/PiZero2W.png" alt="Raspberry Pi Zero 2 W" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">Raspberry Pi Zero 2 W</h3>
+                <p class="shop-card-description">
+                  perfect for monitoring your servers!
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>70</span>
+                  </div>
+                  <div class="shop-card-hours">7 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/500GB.png" alt="500GB SSD" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">500gb SSD</h3>
+                <p class="shop-card-description">
+                  Fast storage for your projects
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>100</span>
+                  </div>
+                  <div class="shop-card-hours">10 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img
+                  src="assets/AmazonBasicsUPS.png"
+                  alt="Amazon Basics UPS 400VA"
+                />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">Amazon Basics UPS 400VA / 255W</h3>
+                <p class="shop-card-description">
+                  Basic battery backup and surge protection
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>120</span>
+                  </div>
+                  <div class="shop-card-hours">12 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/1TB.png" alt="1TB SSD" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">1tb SSD</h3>
+                <p class="shop-card-description">
+                  More storage for your homelab
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>160</span>
+                  </div>
+                  <div class="shop-card-hours">16 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img
+                  src="assets/TP-Link10GB.png"
+                  alt="TP-Link TX401 10Gb Network Card"
+                />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">
+                  TP-Link 10Gb PCIe Network Card (TX401)
+                </h3>
+                <p class="shop-card-description">
+                  High-speed 10Gb networking for serious homelabs
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>200</span>
+                  </div>
+                  <div class="shop-card-hours">20 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img
+                  src="assets/IronWolf4TB.png"
+                  alt="Seagate IronWolf Pro 4TB HDD"
+                />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">Seagate IronWolf Pro 4TB HDD</h3>
+                <p class="shop-card-description">
+                  NAS-grade storage built for 24/7 workloads
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>300</span>
+                  </div>
+                  <div class="shop-card-hours">30 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/PI5.png" alt="Raspberry Pi 5" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">Raspberry Pi 5</h3>
+                <p class="shop-card-description">
+                  The latest and most powerful Pi
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>300</span>
+                  </div>
+                  <div class="shop-card-hours">30 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/BeeLinkMiniPC.png" alt="Beelink Mini PC" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">Beelink Mini PC, Mini S12</h3>
+                <p class="shop-card-description">
+                  Compact and powerful mini PC
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>360</span>
+                  </div>
+                  <div class="shop-card-hours">36 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/GMKtecMiniPc.png" alt="GMKtec Mini PC" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">GMKtec Mini PC N95</h3>
+                <p class="shop-card-description">
+                  Efficient mini computer for your lab
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>400</span>
+                  </div>
+                  <div class="shop-card-hours">40 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img
+                  src="assets/APCBackUPS.png"
+                  alt="APC Back-UPS Pro 1500VA"
+                />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">APC Back-UPS Pro 1500VA</h3>
+                <p class="shop-card-description">
+                  Reliable UPS for servers and NAS systems
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>400</span>
+                  </div>
+                  <div class="shop-card-hours">40 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img
+                  src="assets/IronWolf8TB.png"
+                  alt="Seagate IronWolf Pro 8TB HDD"
+                />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">Seagate IronWolf Pro 8TB HDD</h3>
+                <p class="shop-card-description">
+                  High-capacity NAS storage for growing labs
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>500</span>
+                  </div>
+                  <div class="shop-card-hours">50 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/Synology2BAY.png" alt="Synology DS223" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">Synology DS223 (2 bay)</h3>
+                <p class="shop-card-description">Professional NAS solution</p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>600</span>
+                  </div>
+                  <div class="shop-card-hours">60 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/4TB.png" alt="4TB SSD" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">4tb SSD</h3>
+                <p class="shop-card-description">Massive storage capacity</p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>750</span>
+                  </div>
+                  <div class="shop-card-hours">75 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/AsusMini.png" alt="ASUS NUC 15 Pro" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">ASUS NUC 15 Pro (core 3)</h3>
+                <p class="shop-card-description">
+                  High-performance mini workstation
+                </p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>760</span>
+                  </div>
+                  <div class="shop-card-hours">76 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/UGreenNasync.png" alt="UGREEN NASync DH4300" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">
+                  UGREEN NASync DH4300 Plus (4 bay)
+                </h3>
+                <p class="shop-card-description">Advanced 4-bay NAS system</p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>850</span>
+                  </div>
+                  <div class="shop-card-hours">85 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="https://google.com" target="_blank" class="shop-card-link">
+            <div class="shop-card">
+              <div class="shop-card-image">
+                <img src="assets/Synology4BAY.png" alt="Synology DS925+" />
+              </div>
+              <div class="shop-card-content">
+                <h3 class="shop-card-title">Synology DS925+ (4 bay)</h3>
+                <p class="shop-card-description">Premium 4-bay NAS solution</p>
+                <div class="shop-card-footer">
+                  <div class="shop-card-price">
+                    <img
+                      src="assets/lancurrency.png"
+                      alt="ethernet"
+                      class="price-icon"
+                    />
+                    <span>1300</span>
+                  </div>
+                  <div class="shop-card-hours">130 hours</div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>
+        This website is
+        <a href="https://github.com/sebcun/homelab" target="_blank"
+          >open source!</a
+        >
+      </p>
+      <p>
+        This program is supported by
+        <a href="https://hackclub.com" target="_blank">HackClub.</a>
+      </p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const grid = document.getElementById("shop-grid");
+        const initialCards = Array.from(grid.children);
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => {
+                entry.target.classList.add("fade-in");
+              }, index * 50);
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        initialCards.forEach((card) => {
+          card.classList.add("fade-in-element");
+          observer.observe(card);
+        });
+
+        const getHours = (card) => {
+          const hoursText = card.querySelector(".shop-card-hours").innerText;
+          return parseInt(hoursText);
+        };
+        const getCardText = (card) => {
+          const title = card
+            .querySelector(".shop-card-title")
+            .innerText.toLowerCase();
+          const description = card
+            .querySelector(".shop-card-description")
+            .innerText.toLowerCase();
+          return title + " " + description;
+        };
+
+        window.searchItems = function () {
+          const searchInput = document.getElementById("search-input");
+          const searchTerm = searchInput.value.toLowerCase();
+          const allCards = Array.from(grid.children);
+
+          allCards.forEach((card) => {
+            const cardText = getCardText(card);
+            if (cardText.includes(searchTerm)) {
+              card.style.display = "block";
+              card.classList.add("search-visible");
+            } else {
+              card.style.display = "none";
+              card.classList.remove("search-visible");
+            }
+          });
+        };
+
+        window.sortRewards = function () {
+          const select = document.getElementById("sort-select");
+          const sortValue = select.value;
+          const currentCards = Array.from(grid.children).filter(
+            (card) => card.style.display !== "none"
+          );
+          const allCards = Array.from(grid.children);
+          allCards.sort((a, b) => {
+            const aHours = getHours(a);
+            const bHours = getHours(b);
+
+            if (sortValue === "asc") {
+              return aHours - bHours;
+            } else {
+              return bHours - aHours;
+            }
+          });
+
+          grid.innerHTML = "";
+          allCards.forEach((card) => grid.appendChild(card));
+        };
+        sortRewards();
+      });
+    </script>
   </body>
 </html>

@@ -1,0 +1,20 @@
+{
+  "mode": "rsvp",
+  "rsvp": "https://forms.fillout.com/t/",
+  "home": {
+    "title": "HomeLab ",
+    "description": "Welcome to HomeLab. A YSWS where you ship projects related to having a self hosted server at home, and we ship things to help you create your own setup (or update a setup you already have!)"
+  },
+  "faqs": {
+    "What is HomeLab?": "HomeLab is a Hack Club YSWS program where you ship projects related to having a self hosted server at home, and we ship things to help you create your own setup (or update a setup you already have!)",
+    "When does it start and end?": "HomeLab has started already if you are reading this! Start tracking time. The deadline for projects to be submitted is the 31st of January 2026 11:59PM (EST).",
+    "What is classified as a home server related project?": "We are fairly open to this, however creating a random project that is \"hosted on a home server\" doesn't count. This means you can't build an unrelated website and just claim you can host it on a home server. Instead, ideas include a website that lets you automate tasks and processes on your network, a file explorer based on storage on a NAS, etc. You could also do a hardware project such as a 3d printed server rack.",
+    "How many projects can I make?": "You can make as many project as you would like, as well as contribute them all to your hour total to spend on rewards. Rewards pretty much work like a shop balance where your hours are you balance, and you can buy any amount of things.",
+    "Are there any requirements for participating?": "You must be YSWS eligible (18 years or under) and a participant of Hack Club.",
+    "Is HomeLab free?": "Yes! HomeLab is a Hack Club program and completely free to participate. Find out more at hackclub.com.",
+    "Can I double dip?": "No, you cannot double dip with other YSWS programs.",
+    "Is there a minimum hour requirement and how do I track hours?": "Each project submitted must have at least 3 hours tracked towards it using hackatime.hackclub.com. Projects must also be in a working and shippable state.",
+    "Can I use AI?": "AI coding can be used for at most 20% of the code written. All readmes must also be human written.",
+    "What are the requirements for submitting?": "- Project on a GitHub repo with frequent commits (at least 1 every 4 hours, if not your hours may be reduced!)\n- Project has tracked at least 3 hours.\n- Project is written with not more than 20% of AI\n- You have a working and live demo. (for hardware this can be a picture or video, they must be physically made)"
+  }
+}
