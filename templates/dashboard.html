@@ -37,13 +37,13 @@
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/dashboard">Dashboard</a></li>
-        <li><a href="/rewards">Profile</a></li>
+        <li><a href="/logout">Logout</a></li>
       </ul>
     </nav>
 
     <main class="dashboard-content">
       <header class="dashboard-header">
-        <h1>Welcome, {{ name }}!</h1>
+        <h1>Welcome to {{ config.home.title }}, {{ name }}!</h1>
         <p>Track your projects and manage your orders.</p>
       </header>
 
@@ -54,34 +54,21 @@
             <div class="add-icon">+</div>
             <p>Add New Project</p>
           </div>
+          {% for project in projects %}
           <div class="project-card">
             <div class="project-header">
-              <h3>Home Server Setup</h3>
-              <span class="project-status status-pending">Building</span>
+              <h3>{{ project[1] }}</h3>
+              <span class="project-status status-pending"
+                >{{ project[6] }}</span
+              >
             </div>
-            <p class="project-description">
-              Building a basic home server with Raspberry Pi for file storage
-              and automation.
-            </p>
+            <p class="project-description">{{ project[2] }}</p>
             <div class="project-footer">
-              <span class="project-hours">12 hours logged</span>
+              <span class="project-hours">{{ project[8] }} logged</span>
               <a href="#" class="btn btn-small">Edit</a>
             </div>
           </div>
-          <div class="project-card">
-            <div class="project-header">
-              <h3>Network Monitoring Tool</h3>
-              <span class="project-status status-completed">Shipped</span>
-            </div>
-            <p class="project-description">
-              A web app to monitor network devices and uptime using Python and
-              Flask.
-            </p>
-            <div class="project-footer">
-              <span class="project-hours">8 hours logged</span>
-              <a href="#" class="btn btn-small">View</a>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </section>
 
@@ -124,7 +111,7 @@
       <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <h2>Add New Project</h2>
-        <form id="addProjectForm" onsubmit="submitProject(event)">
+        <form id="addProjectForm" action="/create_project" method="post">
           <label for="title">Title *</label>
           <input type="text" id="title" name="title" required />
 
@@ -170,15 +157,6 @@
           modal.style.display = "none";
         }, 300);
         document.getElementById("addProjectForm").reset();
-      }
-
-      function submitProject(event) {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        const data = Object.fromEntries(formData);
-        console.log("Project data:", data);
-        alert("Project added! (Frontend only - check console for data)");
-        closeModal();
       }
 
       window.onclick = function (event) {

@@ -81,17 +81,41 @@ def auth_callback():
 
 @app.route('/dashboard')
 def dashboard():
-    print(session['slack_id'])
     if 'user' in session:
         slack_id = session['slack_id']
         hackatime_response = requests.get(f"https://hackatime.hackclub.com/api/v1/users/{slack_id}/stats?limit=1000&features=projects&start_date=2025-12-16").json()
-        return render_template('dashboard.html', name=session['user'], config=config, hackatime=hackatime_response)
+        projects = db.get_projects(session['id'])
+        hackatime_projects = hackatime_response.get('data', {}).get('projects', [])
+        projects_with_hours = []
+        for proj in projects:
+            hours = next((hp.get('text', '0') for hp in hackatime_projects if hp.get('name') == proj[5]), '0')
+            projects_with_hours.append(proj + (hours,))
+        return render_template('dashboard.html', name=session['user'], config=config, hackatime=hackatime_response, projects=projects_with_hours)
     else:
         return redirect(url_for('login'))
 
+@app.route('/create_project', methods=['POST'])
+def create_project():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    title = request.form.get('title')
+    description = request.form.get('description')
+    demo_link = request.form.get('demoLink')
+    github_link = request.form.get('githubLink')
+    hackatime_project = request.form.get('hours')
+    user_id = session['id']
+    db.insert_project(user_id, title, description, demo_link, github_link, hackatime_project)
+    return redirect(url_for('dashboard'))
+
 @app.route('/badbad')
 def badbad():
-    return "You are not eligible to access this application."
+    return "You are not YSWS eligible to access this."
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('home'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
