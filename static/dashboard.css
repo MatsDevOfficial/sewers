@@ -261,6 +261,16 @@ body {
   background: var(--primary-hover);
 }
 
+.btn-small.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-small.disabled:hover {
+  background: var(--primary);
+}
+
 .modal {
   display: none;
   position: fixed;
