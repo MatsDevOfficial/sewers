@@ -3,11 +3,13 @@ import os
 import requests
 from dotenv import load_dotenv
 from flask import Flask, render_template, session, redirect, request, url_for
+from werkzeug.middleware.proxy_fix import ProxyFix
 import db
 
 load_dotenv()
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app)
 app.secret_key = 'secret'
 db.init_db()
 
@@ -16,7 +18,6 @@ with open('config.json', 'r') as f:
 
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-REDIRECT_URI = 'http://localhost:5000/auth/callback' 
 AUTH_URL = 'https://auth.hackclub.com/oauth/authorize'
 TOKEN_URL = 'https://auth.hackclub.com/oauth/token'
 JWKS_URL = 'https://auth.hackclub.com/oauth/discovery/keys'
@@ -30,9 +31,10 @@ def home():
 
 @app.route('/login')
 def login():
+    redirect_uri = request.url_root.rstrip('/') + '/auth/callback'
     auth_params = {
         'client_id': CLIENT_ID,
-        'redirect_uri': REDIRECT_URI,
+        'redirect_uri': redirect_uri,
         'response_type': 'code',
         'scope': 'openid profile email slack_id verification_status'
     }
@@ -48,7 +50,7 @@ def auth_callback():
     token_data = {
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET,
-        'redirect_uri': REDIRECT_URI,
+        'redirect_uri': request.url_root.rstrip('/') + '/auth/callback',
         'code': code,
         'grant_type': 'authorization_code'
     }
