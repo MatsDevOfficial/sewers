@@ -10,7 +10,8 @@ load_dotenv()
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
-app.secret_key = 'secret'
+APP_SECRET = os.getenv('APP_SECRET')
+app.secret_key = APP_SECRET
 db.init_db()
 
 with open('config.json', 'r') as f:

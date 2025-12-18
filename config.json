@@ -3,7 +3,7 @@
   "rsvp": "https://forms.fillout.com/t/",
   "github": "https://github.com/sebcun/homelab",
   "home": {
-    "title": "HomeLab ",
+    "title": "HomeLab",
     "description": "Welcome to HomeLab. A YSWS where you ship projects related to having a self hosted server at home, and we ship things to help you create your own setup (or update a setup you already have!)"
   },
   "faqs": {
