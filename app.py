@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, session, redirect, request, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
 import db
+from urllib.parse import urlparse
 
 load_dotenv()
 
@@ -32,7 +33,11 @@ def home():
 
 @app.route('/login')
 def login():
-    redirect_uri = request.url_root.rstrip('/') + '/auth/callback'
+    parsed = urlparse(request.url_root)
+    if parsed.hostname not in ['localhost', '127.0.0.1', '0.0.0.0']:
+        redirect_uri = 'https://' + parsed.netloc + '/auth/callback'
+    else:
+        redirect_uri = request.url_root.rstrip('/') + '/auth/callback'
     auth_params = {
         'client_id': CLIENT_ID,
         'redirect_uri': redirect_uri,
@@ -48,10 +53,15 @@ def auth_callback():
     if not code:
         return "Error: No code received", 400
 
+    parsed = urlparse(request.url_root)
+    if parsed.hostname not in ['localhost', '127.0.0.1', '0.0.0.0']:
+        redirect_uri = 'https://' + parsed.netloc + '/auth/callback'
+    else:
+        redirect_uri = request.url_root.rstrip('/') + '/auth/callback'
     token_data = {
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET,
-        'redirect_uri': request.url_root.rstrip('/') + '/auth/callback',
+        'redirect_uri': redirect_uri,
         'code': code,
         'grant_type': 'authorization_code'
     }
@@ -102,6 +112,10 @@ def edit_project():
     if 'user' not in session:
         return redirect(url_for('login'))
     project_id = request.form.get('project_id')
+    if not project_id:
+        return "Error: No project ID", 400
+    if not db.check_project_owner(project_id, session['id']):
+        return "Error: Unauthorized to edit this project", 403
     title = request.form.get('title')
     description = request.form.get('description')
     demo_link = request.form.get('demoLink')
@@ -132,6 +146,7 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host='0.0.0.0', port=port)

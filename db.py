@@ -58,3 +58,11 @@ def update_project(project_id, title, description, demo_link, github_link, hacka
     c.execute('UPDATE projects SET title=?, description=?, demo_link=?, github_link=?, hackatime_project=? WHERE id=?', (title, description, demo_link, github_link, hackatime_project, project_id))
     conn.commit()
     conn.close()
+    
+def check_project_owner(project_id, user_id):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute('SELECT user_id FROM projects WHERE id = ?', (project_id,))
+    result = c.fetchone()
+    conn.close()
+    return result and result[0] == user_id
