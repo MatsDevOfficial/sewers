@@ -66,3 +66,10 @@ def check_project_owner(project_id, user_id):
     result = c.fetchone()
     conn.close()
     return result and result[0] == user_id
+
+def delete_project(project_id):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM projects WHERE id = ?', (project_id,))
+    conn.commit()
+    conn.close()

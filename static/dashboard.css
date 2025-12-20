@@ -354,7 +354,6 @@ body {
 }
 
 .btn-submit {
-  margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
   background: var(--primary);
   color: var(--text-white);
@@ -363,11 +362,40 @@ body {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s ease;
-  width: 100%;
+  box-sizing: border-box;
 }
 
 .btn-submit:hover {
   background: var(--primary-hover);
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
+}
+
+.btn-submit.btn-small {
+  margin-top: 0;
+}
+
+.btn-delete {
+  padding: 0.75rem 1rem;
+  background: #dc3545;
+  color: var(--text-white);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  flex: 0 0 auto;
+  width: auto;
+  box-sizing: border-box;
+}
+
+.btn-delete:hover {
+  background: #c82333;
 }
 
 @media (max-width: 768px) {

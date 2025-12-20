@@ -124,6 +124,18 @@ def edit_project():
     db.update_project(project_id, title, description, demo_link, github_link, hackatime_project)
     return redirect(url_for('dashboard'))
 
+@app.route('/delete_project', methods=['POST'])
+def delete_project():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    project_id = request.form.get('project_id')
+    if not project_id:
+        return "Error: No project ID", 400
+    if not db.check_project_owner(project_id, session['id']):
+        return "Error: Unauthorized to delete this project", 403
+    db.delete_project(project_id)
+    return redirect(url_for('dashboard'))
+
 @app.route('/create_project', methods=['POST'])
 def create_project():
     if 'user' not in session:
