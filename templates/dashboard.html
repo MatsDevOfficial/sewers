@@ -127,9 +127,21 @@ block head %}
       </div>
       <div class="modal-body p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h2 class="modal-title fw-bold mb-0" id="projectModalLabel">
-            Project
-          </h2>
+          <div class="w-100 me-3">
+            <h2
+              class="modal-title fw-bold mb-0 view-element"
+              id="projectModalLabel"
+            >
+              Project
+            </h2>
+            <input
+              type="text"
+              class="form-control edit-element"
+              id="projectTitleInput"
+              value="Project"
+              style="display: none"
+            />
+          </div>
           <div class="d-flex align-items-center gap-2">
             <span class="fw-bold fs-5">0h</span>
             <span class="badge bg-success">SHIPPED</span>
@@ -138,7 +150,17 @@ block head %}
 
         <div class="mb-4">
           <h5 class="fw-bold">Description</h5>
-          <p class="text-muted">Description Here.</p>
+          <p class="text-muted view-element" id="projectDescText">
+            Description Here.
+          </p>
+          <textarea
+            class="form-control edit-element"
+            id="projectDescInput"
+            rows="3"
+            style="display: none"
+          >
+Description Here.</textarea
+          >
         </div>
 
         <div class="mb-4">
@@ -151,6 +173,7 @@ block head %}
               data-bs-toggle="dropdown"
               data-bs-auto-close="outside"
               aria-expanded="false"
+              disabled
             >
               <span id="selectedProjectsText" class="text-muted"
                 >Select projects...</span
@@ -166,7 +189,9 @@ block head %}
                       type="checkbox"
                       value="1"
                       id="project1"
-                    /><label class="form-check-label w-100" for="project1">1</label>
+                    /><label class="form-check-label w-100" for="project1"
+                      >1</label
+                    >
                   </div></a
                 >
               </li>
@@ -178,7 +203,9 @@ block head %}
                       type="checkbox"
                       value="2"
                       id="project2"
-                    /><label class="form-check-label w-100" for="project2">2</label>
+                    /><label class="form-check-label w-100" for="project2"
+                      >2</label
+                    >
                   </div></a
                 >
               </li>
@@ -190,7 +217,9 @@ block head %}
                       type="checkbox"
                       value="3"
                       id="project3"
-                    /><label class="form-check-label w-100" for="project3">3</label>
+                    /><label class="form-check-label w-100" for="project3"
+                      >3</label
+                    >
                   </div></a
                 >
               </li>
@@ -202,7 +231,9 @@ block head %}
                       type="checkbox"
                       value="4"
                       id="project4"
-                    /><label class="form-check-label w-100" for="project4">4</label>
+                    /><label class="form-check-label w-100" for="project4"
+                      >4</label
+                    >
                   </div></a
                 >
               </li>
@@ -214,7 +245,9 @@ block head %}
                       type="checkbox"
                       value="5"
                       id="project5"
-                    /><label class="form-check-label w-100" for="project5">5</label>
+                    /><label class="form-check-label w-100" for="project5"
+                      >5</label
+                    >
                   </div></a
                 >
               </li>
@@ -226,7 +259,9 @@ block head %}
                       type="checkbox"
                       value="6"
                       id="project6"
-                    /><label class="form-check-label w-100" for="project6">6</label>
+                    /><label class="form-check-label w-100" for="project6"
+                      >6</label
+                    >
                   </div></a
                 >
               </li>
@@ -238,7 +273,9 @@ block head %}
                       type="checkbox"
                       value="7"
                       id="project7"
-                    /><label class="form-check-label w-100" for="project7">7</label>
+                    /><label class="form-check-label w-100" for="project7"
+                      >7</label
+                    >
                   </div></a
                 >
               </li>
@@ -255,7 +292,7 @@ block head %}
               ></span>
               <input
                 type="text"
-                class="form-control form-control-modern group-end"
+                class="form-control form-control-modern group-end link-input"
                 placeholder="Github Link"
                 value="https://github.com"
                 readonly
@@ -267,7 +304,7 @@ block head %}
               ></span>
               <input
                 type="text"
-                class="form-control form-control-modern group-end"
+                class="form-control form-control-modern group-end link-input"
                 placeholder="Demo Link"
                 value="https://demo.com"
                 readonly
@@ -277,9 +314,29 @@ block head %}
         </div>
 
         <div class="d-flex justify-content-end gap-2 mt-5">
-          <button type="button" class="btn btn-danger">Delete</button>
-          <button type="button" class="btn btn-secondary">Edit</button>
-          <button type="button" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-outline-danger">Delete</button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary view-element"
+            id="editBtn"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary view-element"
+            id="submitBtn"
+          >
+            Submit
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary edit-element"
+            id="saveBtn"
+            style="display: none"
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>
@@ -323,6 +380,48 @@ block head %}
         }
       });
     });
+
+    const editBtn = document.getElementById("editBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const viewElements = document.querySelectorAll(".view-element");
+    const editElements = document.querySelectorAll(".edit-element");
+    const linkInputs = document.querySelectorAll(".link-input");
+    const dropdownBtn = document.getElementById("hackatimeDropdown");
+
+    const titleText = document.getElementById("projectModalLabel");
+    const titleInput = document.getElementById("projectTitleInput");
+    const descText = document.getElementById("projectDescText");
+    const descInput = document.getElementById("projectDescInput");
+
+    editBtn.addEventListener("click", () => {
+      toggleEdit(true);
+    });
+
+    saveBtn.addEventListener("click", () => {
+      titleText.textContent = titleInput.value;
+      descText.textContent = descInput.value;
+      toggleEdit(false);
+    });
+
+    function toggleEdit(isEdit) {
+      if (isEdit) {
+        viewElements.forEach((el) => (el.style.display = "none"));
+        editElements.forEach((el) => {
+          el.style.display = "";
+          el.classList.add("fade-in");
+        });
+        linkInputs.forEach((input) => input.removeAttribute("readonly"));
+        dropdownBtn.removeAttribute("disabled");
+      } else {
+        editElements.forEach((el) => (el.style.display = "none"));
+        viewElements.forEach((el) => {
+          el.style.display = "";
+          el.classList.add("fade-in");
+        });
+        linkInputs.forEach((input) => input.setAttribute("readonly", true));
+        dropdownBtn.setAttribute("disabled", true);
+      }
+    }
   });
 </script>
 {% endblock %}
