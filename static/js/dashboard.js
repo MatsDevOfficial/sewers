@@ -210,7 +210,7 @@ function openProjectModal(project) {
   setHackatimeProjects(hackatimeProject);
   toggleEditMode(false);
   
-  if (status === 'Pending Review') {
+  if (status === 'Pending Review' || status === 'Shipped' || status === 'Approved') {
     submitBtn.style.display = 'none';
     editBtn.style.display = 'none';
   } else if (status === 'Building') {
@@ -218,7 +218,7 @@ function openProjectModal(project) {
     editBtn.style.display = '';
   } else {
     submitBtn.style.display = 'none';
-    editBtn.style.display = '';
+    editBtn.style.display = 'none';
   }
   
   projectModal.show();

@@ -8,7 +8,7 @@ import db
 import admin_db
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', os.urandom(24))
+app.secret_key = os.getenv('APP_SECRET', os.urandom(24))
 
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
@@ -18,28 +18,10 @@ JWKS_URL = 'https://auth.hackclub.com/oauth/discovery/keys'
 USERINFO_URL = 'https://auth.hackclub.com/oauth/userinfo'
 
 ADMIN_EMAILS = os.getenv('ORGS', '').split(',')
+REVIEWER_EMAILS = os.getenv('ORGS', '').split(',')
 
 db.init_db()
 admin_db.init_db()
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return redirect(url_for('login'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            return redirect(url_for('login'))
-        user = db.get_user_by_id(session['user_id'])
-        if not user or user['slack_id'] not in ADMIN_EMAILS:
-            return "Unauthorized", 403
-        return f(*args, **kwargs)
-    return decorated_function
 
 @app.route('/')
 def index():
@@ -125,25 +107,30 @@ def unauthorized():
 @app.route('/dash')
 def dashboard():
     if 'user_id' not in session:
+        print('not in session')
         return redirect(url_for('login'))
     
     return render_template('dashboard.html')
 
 @app.route('/admin')
-@admin_required
 def admin():
-    stats = db.get_project_stats()
-    all_projects = db.get_all_projects()
+    if 'slack_id' not in session:
+        return jsonify({'error': 'abc'}), 401
     
-    return render_template('admin.html',
-                         stats=stats,
-                         projects=all_projects)
+    if session['slack_id'] not in ADMIN_EMAILS:
+        return jsonify({'error': '123'}), 403
+    
+    return render_template('admin.html')
 
 @app.route('/reviewer')
-@admin_required
 def reviewer():
-    pending_projects = db.get_all_projects(status='Pending Review')
-    return render_template('reviewer.html', projects=pending_projects)
+    if 'slack_id' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    if session['slack_id'] not in REVIEWER_EMAILS:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    return render_template('reviewer.html')
 
 @app.route('/api/projects', methods=['GET'])
 def get_projects():
@@ -387,6 +374,39 @@ def delete_reward_endpoint(reward_id):
         return jsonify({'error': 'Unauthorized'}), 403
     
     success = admin_db.delete_reward(reward_id)
+    return jsonify({'success': success})
+
+@app.route('/api/reviewer/projects', methods=['GET'])
+def get_reviewer_projects():
+    if 'slack_id' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    if session['slack_id'] not in REVIEWER_EMAILS:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    projects = db.get_all_projects()
+    return jsonify({'projects': projects})
+
+@app.route('/api/reviewer/projects/<int:project_id>/approve', methods=['POST'])
+def approve_project(project_id):
+    if 'slack_id' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    if session['slack_id'] not in REVIEWER_EMAILS:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    success = db.update_project_status(project_id, 'Shipped')
+    return jsonify({'success': success})
+
+@app.route('/api/reviewer/projects/<int:project_id>/reject', methods=['POST'])
+def reject_project(project_id):
+    if 'slack_id' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    if session['slack_id'] not in REVIEWER_EMAILS:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    success = db.update_project_status(project_id, 'Building')
     return jsonify({'success': success})
 
 if __name__ == '__main__':
