@@ -1,63 +1,201 @@
 {% extends "base.html" %}
-{% block title %} YSWS-Template {% endblock %}
+{% block title %} Sewers | You Ship, We Ship {% endblock %}
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/carousel.css') }}" />
 <style>
-  .accordion-button:not(.collapsed) {
-    background-color: rgb(245, 245, 245);
-    color: black;
-    box-shadow: none;
-  }
-  .accordion-button:focus {
-    box-shadow: none;
-    border-color: rgba(0, 0, 0, 0.125);
-  }
+    .hero-section {
+        background: radial-gradient(circle at center, rgba(230, 180, 0, 0.05) 0%, transparent 70%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+        opacity: 0.1;
+        pointer-events: none;
+    }
+
+    .industrial-border {
+        border: 2px solid var(--primary);
+        position: relative;
+        padding: 2rem;
+        background: var(--bg-card);
+    }
+
+    .industrial-border::after {
+        content: "PROTOCOL";
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: var(--primary);
+        color: black;
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        font-weight: bold;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .reward-card {
+        border: 1px solid var(--border-color);
+        background: var(--bg-card);
+        transition: transform 0.3s ease;
+    }
+
+    .reward-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+    }
+
+    .grayscale-img {
+        filter: grayscale(100%) contrast(1.2);
+        transition: filter 0.3s ease;
+    }
+
+    .reward-card:hover .grayscale-img {
+        filter: grayscale(0%) contrast(1);
+    }
 </style>
 {% endblock %}
-{% block navbar %} {% endblock %}
-{% block navbar_balance %} 0h {% endblock %}
-{% block content %}
 
-<div class="d-flex align-items-center justify-content-center vh-100 text-center">
-  <div class="col-lg-8 mx-auto">
-    <h1 class="display-1 fw-bold mb-3">YSWS Template</h1>
-    <p class="lead mb-4">description of the YSWS</p>
-    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-      <button type="button" class="btn btn-outline-secondary btn-lg px-4 gap-3 same-size">
-        Rewards
-      </button>
-      <button type="button" class="btn btn-primary btn-lg px-4 gap-3 same-size">
-        Get Started
-      </button>
-      <button type="button" class="btn btn-outline-secondary btn-lg px-4 same-size">
-        FAQs
-      </button>
+{% block navbar_balance %}
+{% if session.user_id %}
+<span class="text-primary" id="userHoursDisplay">LOADING...</span>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="hero-section d-flex align-items-center justify-content-center vh-100 text-center">
+    <div class="col-lg-10 mx-auto px-4">
+        <div class="mb-4">
+            <span class="badge bg-primary px-3 py-2 mb-3">VERSION 1.0.4 // HACK CLUB YSWS</span>
+            <h1 class="display-1 fw-bold mb-0 text-primary" style="letter-spacing: -2px;">THE SEWERS</h1>
+            <p class="text-secondary fw-bold" style="letter-spacing: 5px; margin-top: -10px;">YOU SHIP, WE SHIP</p>
+        </div>
+
+        <p class="lead mb-5 text-muted mx-auto" style="max-width: 700px; font-family: 'JetBrains Mono', monospace;">
+            Build your app in the industrial underground. Ship code, get your app in the App Store, and earn custom NFC
+            chips with your link.
+        </p>
+
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-5">
+            <a href="" class="btn btn-primary btn-lg px-5 py-3">
+                Starting date not configured
+            </a>
+            <a href="#rewards" class="btn btn-outline-secondary btn-lg px-5 py-3">
+                VIEW REWARDS
+            </a>
+        </div>
+
+        <div class="mt-5 pt-5 opacity-50">
+            <div class="d-flex justify-content-center gap-5 text-secondary small fw-bold">
+                <span>// 01. CODE</span>
+                <span>// 02. SHIP</span>
+                <span>// 03. NFC LINK</span>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
-<section class="py-5 bg-light">
-  <div class="container-fluid px-0">
-    <h1 class="text-center mb-4">Rewards</h1>
-    <div class="carousel-container">
-      <div class="carousel-track"></div>
+<section id="rewards" class="py-5 bg-industrial">
+    <div class="container py-5">
+        <div class="mb-5 text-center">
+            <h2 class="display-5 fw-bold text-primary">APP MANIFEST</h2>
+            <div class="mx-auto" style="height: 2px; width: 100px; background: var(--primary);"></div>
+        </div>
+
+        <div class="row g-4">
+            {% if rewards %}
+            {% for reward in rewards %}
+            <div class="col-md-4">
+                <div class="reward-card p-4 h-100">
+                    <img src="{{ reward.image_url }}" alt="{{ reward.name }}" class="img-fluid mb-3 grayscale-img"
+                        style="height: 200px; object-fit: contain; width: 100%;">
+                    <h4 class="text-primary mb-2">{{ reward.name }}</h4>
+                    <p class="text-secondary small mb-3">{{ reward.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-dark text-primary border border-primary">{{ reward.cost }} HOURS</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted small fw-bold">// NO APPS DETECTED IN MANIFEST //</p>
+            </div>
+            {% endif %}
+        </div>
     </div>
-  </div>
 </section>
 
-<section class="py-5 bg-white">
-  <div class="container col-lg-8">
-    <h1 class="text-center mb-5 fw-bold">FAQs</h1>
-    <div class="accordion" id="faqAccordion"></div>
-  </div>
+<section class="py-5 bg-industrial border-top border-bottom border-secondary">
+    <div class="container col-lg-8 py-5">
+        <div class="industrial-border mb-5">
+            <h2 class="text-primary mb-4 fw-bold">THE SEWER PROTOCOL</h2>
+            <p class="text-secondary">
+                This is a Hack Club "You Ship, We Ship" (YSWS). Build and ship your app to earn custom gear and your
+                link on an NFC chip.
+            </p>
+            <ul class="text-secondary list-unstyled">
+                <li><span class="text-primary">01.</span> Register for the Sewers with your Hack Club Slack.</li>
+                <li><span class="text-primary">02.</span> Build your app and log at least 3 hours.</li>
+                <li><span class="text-primary">03.</span> Submit your ship link for review.</li>
+                <li><span class="text-primary">04.</span> Get your app in the App Store and receive custom NFC chips
+                    with your link.</li>
+            </ul>
+        </div>
+    </div>
 </section>
 
-<footer class="py-4 bg-light text-center">
-  <div class="container">
-    <span class="text-muted">This website is <a href="https://github.com">Open source!</a></span>
-  </div>
+<section class="py-5 bg-industrial">
+    <div class="container col-lg-8 py-5">
+        <h2 class="text-center mb-5 fw-bold text-primary">FAQs</h2>
+        <div class="accordion accordion-flush" id="faqAccordion">
+            {% if faqs %}
+            {% for faq in faqs %}
+            <div class="accordion-item mb-3">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#faq-{{ faq.id }}">
+                        {{ faq.question }}
+                    </button>
+                </h2>
+                <div id="faq-{{ faq.id }}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        {{ faq.answer }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted small fw-bold">// NO INFO FOUND IN FAQ DATABASE //</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<footer class="py-5 bg-dark border-top border-primary text-center">
+    <div class="container">
+        <p class="text-muted small mb-0">HACK CLUB SEWERS PROTOCOL &copy; 2026 // OPEN SOURCE // EST. 2025</p>
+    </div>
 </footer>
 
-<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<script>
+  {% if session.user_id %}
+  fetch('/api/user/profile')
+    .then(r => r.json())
+    .then(data => {
+      const display = document.getElementById('userHoursDisplay');
+      if (display) display.innerText = data.total_hours.toFixed(1) + 'H';
+    });
+  {% endif %}
+</script>
 
 {% endblock %}

@@ -161,3 +161,35 @@ def project_rejected(project, reason):
     ]
 
     send_dm(project["slack_id"], blocks)
+
+
+def project_created(project):
+    blocks = [
+        {
+            "type": "header",
+            "text": {"type": "plain_text", "text": "🆕 New Project Submitted"},
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"*Project:* {project['title']}\n*Owner:* <@{project['slack_id']}>",
+            },
+        },
+        {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": f"> {project['description']}"},
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Review Project"},
+                    "url": "https://sewers.hackclub.com/reviewer",
+                }
+            ],
+        },
+    ]
+
+    send_channel_message("C09U5BFU3GA", blocks)

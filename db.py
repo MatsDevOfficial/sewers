@@ -25,6 +25,7 @@ def init_db():
             email TEXT UNIQUE NOT NULL,
             nickname TEXT,
             slack_id TEXT,
+            ship_uuid TEXT UNIQUE,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )''')
         c.execute('''CREATE TABLE IF NOT EXISTS projects (
@@ -51,11 +52,20 @@ def get_or_create_user(email: str, nickname: Optional[str] = None, slack_id: Opt
         result = c.fetchone()
         if result:
             return result[0]
+        import uuid
+        ship_uuid = str(uuid.uuid4())
         c.execute(
-            'INSERT INTO users (email, nickname, slack_id) VALUES (?, ?, ?)',
-            (email, nickname, slack_id)
+            'INSERT INTO users (email, nickname, slack_id, ship_uuid) VALUES (?, ?, ?, ?)',
+            (email, nickname, slack_id, ship_uuid)
         )
         return c.lastrowid
+
+def get_user_by_uuid(uuid_str: str) -> Optional[Dict[str, Any]]:
+    with get_db_connection() as conn:
+        c = conn.cursor()
+        c.execute('SELECT * FROM users WHERE ship_uuid = ?', (uuid_str,))
+        result = c.fetchone()
+        return dict(result) if result else None
 
 def get_user_by_id(user_id: int) -> Optional[Dict[str, Any]]:
     with get_db_connection() as conn:

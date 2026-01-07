@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %} {{ user.nickname }}'s Ships {% endblock %}
+{% block content %}
+<div class="py-5 bg-industrial min-vh-100">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-3 fw-bold text-primary mb-2">{{ user.nickname }}</h1>
+            <p class="lead text-secondary">The Sewer Fleet</p>
+        </div>
+
+        <div class="row g-4">
+            {% if projects %}
+                {% for project in projects %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h3 class="card-title text-primary mb-0">{{ project.title }}</h3>
+                                <span class="badge {% if project.status == 'Shipped' %}bg-success{% else %}bg-primary{% endif %}">
+                                    {{ project.status }}
+                                </span>
+                            </div>
+                            <p class="card-text text-secondary mb-4">{{ project.description }}</p>
+                            <div class="mt-auto d-flex gap-2">
+                                <a href="{{ project.demo_link }}" class="btn btn-primary btn-sm flex-fill" target="_blank">View Ship</a>
+                                <a href="{{ project.github_link }}" class="btn btn-outline-secondary btn-sm flex-fill" target="_blank">Source Code</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5">
+                    <p class="text-muted">No ships have docked here yet...</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-top: 4px solid var(--primary) !important;
+    }
+</style>
+{% endblock %}

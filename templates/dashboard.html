@@ -1,22 +1,22 @@
 {% extends "base.html" %} {% block title %} YSWS-Template {% endblock %} {%
 block head %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/dashboard.css') }}"
-/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
 <style>
   .fade-in {
     animation: fadeIn 0.3s ease-in-out;
   }
+
   @keyframes fadeIn {
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
   }
-  .form-check-input:checked + .form-check-label {
+
+  .form-check-input:checked+.form-check-label {
     text-decoration: line-through;
     color: #6c757d;
   }
@@ -27,15 +27,22 @@ block head %}
 <div class="container py-5 vh-100">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Projects</h1>
-    <button class="btn btn-primary" id="createProjectBtn">
-      <i class="bi bi-plus-lg me-2"></i>Create Project
-    </button>
+    <div class="d-flex gap-2">
+      <div id="shipLinkContainer"
+        class="d-none alert alert-dark d-flex align-items-center mb-0 py-1 px-3 border-secondary"
+        style="background: var(--bg-card);">
+        <code id="shipLinkText" class="text-primary me-2" style="font-family: 'JetBrains Mono', monospace;"></code>
+        <button class="btn btn-sm btn-outline-primary" onclick="copyShipLink()" title="Copy NFC Link">
+          <i class="bi bi-copy"></i>
+        </button>
+      </div>
+      <button class="btn btn-primary" id="createProjectBtn">
+        <i class="bi bi-plus-lg me-2"></i>Create Project
+      </button>
+    </div>
   </div>
 
-  <div
-    class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"
-    id="projectsGrid"
-  >
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="projectsGrid">
     <div class="col-12 text-center py-5" style="grid-column: 1 / -1;">
       <div class="spinner-border text-primary mb-3" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -45,60 +52,33 @@ block head %}
   </div>
 </div>
 
-<div
-  class="modal fade"
-  id="createProjectModal"
-  tabindex="-1"
-  aria-labelledby="createProjectModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content overflow-hidden border-0 shadow">
       <div class="modal-body p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div class="w-100 me-3">
-            <input
-              type="text"
-              class="form-control"
-              id="createProjectTitle"
-              placeholder="Project Title"
-              required
-            />
+            <input type="text" class="form-control" id="createProjectTitle" placeholder="Project Title" required />
           </div>
         </div>
 
         <div class="mb-4">
           <h5 class="fw-bold">Description</h5>
-          <textarea
-            class="form-control"
-            id="createProjectDesc"
-            rows="3"
-            placeholder="Project description"
-            required
-          ></textarea>
+          <textarea class="form-control" id="createProjectDesc" rows="3" placeholder="Project description"
+            required></textarea>
         </div>
 
         <div class="mb-4">
           <label class="form-label fw-bold">Hackatime Projects</label>
           <div class="dropdown">
-            <button
-              class="btn custom-dropdown-btn w-100 text-start d-flex justify-content-between align-items-center"
-              type="button"
-              id="createHackatimeDropdown"
-              data-bs-toggle="dropdown"
-              data-bs-auto-close="outside"
-              aria-expanded="false"
-            >
-              <span id="createSelectedProjectsText" class="text-muted"
-                >Select projects...</span
-              >
+            <button class="btn custom-dropdown-btn w-100 text-start d-flex justify-content-between align-items-center"
+              type="button" id="createHackatimeDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+              aria-expanded="false">
+              <span id="createSelectedProjectsText" class="text-muted">Select projects...</span>
               <i class="bi bi-chevron-down"></i>
             </button>
-            <ul
-              class="dropdown-menu w-100"
-              aria-labelledby="createHackatimeDropdown"
-              id="createHackatimeList"
-            ></ul>
+            <ul class="dropdown-menu w-100" aria-labelledby="createHackatimeDropdown" id="createHackatimeList"></ul>
           </div>
         </div>
 
@@ -106,46 +86,23 @@ block head %}
           <h5 class="fw-bold mb-3">Links</h5>
           <div class="d-flex gap-3 flex-column flex-md-row">
             <div class="input-group">
-              <span class="input-group-text input-group-text-modern"
-                ><i class="bi bi-github"></i
-              ></span>
-              <input
-                type="url"
-                class="form-control form-control-modern group-end"
-                placeholder="Github Link"
-                id="createGithubInput"
-                required
-              />
+              <span class="input-group-text input-group-text-modern"><i class="bi bi-github"></i></span>
+              <input type="url" class="form-control form-control-modern group-end" placeholder="Github Link"
+                id="createGithubInput" required />
             </div>
             <div class="input-group">
-              <span class="input-group-text input-group-text-modern"
-                ><i class="bi bi-link-45deg"></i
-              ></span>
-              <input
-                type="url"
-                class="form-control form-control-modern group-end"
-                placeholder="Demo Link"
-                id="createDemoInput"
-                required
-              />
+              <span class="input-group-text input-group-text-modern"><i class="bi bi-link-45deg"></i></span>
+              <input type="url" class="form-control form-control-modern group-end" placeholder="Demo Link"
+                id="createDemoInput" required />
             </div>
           </div>
         </div>
 
         <div class="d-flex justify-content-end gap-2 mt-5">
-          <button
-            type="button"
-            class="btn btn-outline-secondary"
-            data-bs-dismiss="modal"
-          >
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             Cancel
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            id="createProjectSaveBtn"
-            disabled
-          >
+          <button type="button" class="btn btn-primary" id="createProjectSaveBtn" disabled>
             Create Project
           </button>
         </div>
@@ -154,25 +111,14 @@ block head %}
   </div>
 </div>
 
-<div
-  class="modal fade"
-  id="projectModal"
-  tabindex="-1"
-  aria-labelledby="projectModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content overflow-hidden border-0 shadow">
       <div class="modal-body p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div class="w-100 me-3">
             <h2 class="modal-title fw-bold mb-0" id="projectModalLabel"></h2>
-            <input
-              type="text"
-              class="form-control"
-              id="projectTitleInput"
-              style="display: none"
-            />
+            <input type="text" class="form-control" id="projectTitleInput" style="display: none" />
           </div>
           <div class="d-flex align-items-center gap-2">
             <span class="fw-bold fs-5" id="projectModalHours">0h</span>
@@ -183,36 +129,19 @@ block head %}
         <div class="mb-4">
           <h5 class="fw-bold">Description</h5>
           <p class="text-muted" id="projectDescText"></p>
-          <textarea
-            class="form-control"
-            id="projectDescInput"
-            rows="3"
-            style="display: none"
-          ></textarea>
+          <textarea class="form-control" id="projectDescInput" rows="3" style="display: none"></textarea>
         </div>
 
         <div class="mb-4">
           <label class="form-label fw-bold">Hackatime Projects</label>
           <div class="dropdown">
-            <button
-              class="btn custom-dropdown-btn w-100 text-start d-flex justify-content-between align-items-center"
-              type="button"
-              id="hackatimeDropdown"
-              data-bs-toggle="dropdown"
-              data-bs-auto-close="outside"
-              aria-expanded="false"
-              disabled
-            >
-              <span id="selectedProjectsText" class="text-muted"
-                >Select projects...</span
-              >
+            <button class="btn custom-dropdown-btn w-100 text-start d-flex justify-content-between align-items-center"
+              type="button" id="hackatimeDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+              aria-expanded="false" disabled>
+              <span id="selectedProjectsText" class="text-muted">Select projects...</span>
               <i class="bi bi-chevron-down"></i>
             </button>
-            <ul
-              class="dropdown-menu w-100"
-              aria-labelledby="hackatimeDropdown"
-              id="hackatimeList"
-            ></ul>
+            <ul class="dropdown-menu w-100" aria-labelledby="hackatimeDropdown" id="hackatimeList"></ul>
           </div>
         </div>
 
@@ -220,28 +149,14 @@ block head %}
           <h5 class="fw-bold mb-3">Links</h5>
           <div class="d-flex gap-3 flex-column flex-md-row">
             <div class="input-group">
-              <span class="input-group-text input-group-text-modern"
-                ><i class="bi bi-github"></i
-              ></span>
-              <input
-                type="text"
-                class="form-control form-control-modern group-end"
-                placeholder="Github Link"
-                id="githubInput"
-                readonly
-              />
+              <span class="input-group-text input-group-text-modern"><i class="bi bi-github"></i></span>
+              <input type="text" class="form-control form-control-modern group-end" placeholder="Github Link"
+                id="githubInput" readonly />
             </div>
             <div class="input-group">
-              <span class="input-group-text input-group-text-modern"
-                ><i class="bi bi-link-45deg"></i
-              ></span>
-              <input
-                type="text"
-                class="form-control form-control-modern group-end"
-                placeholder="Demo Link"
-                id="demoInput"
-                readonly
-              />
+              <span class="input-group-text input-group-text-modern"><i class="bi bi-link-45deg"></i></span>
+              <input type="text" class="form-control form-control-modern group-end" placeholder="Demo Link"
+                id="demoInput" readonly />
             </div>
           </div>
         </div>
@@ -256,20 +171,10 @@ block head %}
           <button type="button" class="btn btn-primary" id="submitBtn">
             Submit
           </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary"
-            id="cancelEditBtn"
-            style="display: none"
-          >
+          <button type="button" class="btn btn-outline-secondary" id="cancelEditBtn" style="display: none">
             Cancel
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            id="saveBtn"
-            style="display: none"
-          >
+          <button type="button" class="btn btn-primary" id="saveBtn" style="display: none">
             Save
           </button>
         </div>
@@ -278,99 +183,47 @@ block head %}
   </div>
 </div>
 
-<div
-  class="modal fade"
-  id="submitChecklistModal"
-  tabindex="-1"
-  aria-labelledby="submitChecklistModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="submitChecklistModal" tabindex="-1" aria-labelledby="submitChecklistModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content shadow border-0 rounded-3">
       <div class="modal-header border-0">
         <h5 class="modal-title fw-bold" id="submitChecklistModalLabel">
           Submit Project
         </h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="form-check mb-3">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="checkHours"
-            disabled
-          />
-          <label class="form-check-label" for="checkHours"
-            >Worked on this project for at least 3 hours</label
-          >
+          <input class="form-check-input" type="checkbox" id="checkHours" disabled />
+          <label class="form-check-label" for="checkHours">Worked on this project for at least 3 hours</label>
         </div>
         <div class="form-check mb-3">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="checkDemo"
-            disabled
-          />
-          <label class="form-check-label" for="checkDemo"
-            >A working demo link</label
-          >
+          <input class="form-check-input" type="checkbox" id="checkDemo" disabled />
+          <label class="form-check-label" for="checkDemo">A working demo link</label>
         </div>
         <div class="form-check mb-3">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="checkGithub"
-            disabled
-          />
-          <label class="form-check-label" for="checkGithub"
-            >A Git repo link</label
-          >
+          <input class="form-check-input" type="checkbox" id="checkGithub" disabled />
+          <label class="form-check-label" for="checkGithub">A Git repo link</label>
         </div>
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" id="checkReadme" />
-          <label class="form-check-label" for="checkReadme"
-            >A readme on the Git repo that is not written by AI</label
-          >
+          <label class="form-check-label" for="checkReadme">A readme on the Git repo that is not written by AI</label>
         </div>
         <div class="form-check mb-3">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="checkBanner"
-            checked
-            disabled
-          />
-          <label class="form-check-label" for="checkBanner"
-            >A banner image for the project has been uploaded</label
-          >
+          <input class="form-check-input" type="checkbox" id="checkBanner" checked disabled />
+          <label class="form-check-label" for="checkBanner">A banner image for the project has been uploaded</label>
         </div>
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" id="checkShippable" />
-          <label class="form-check-label" for="checkShippable"
-            >The project is in a working, shippable state</label
-          >
+          <label class="form-check-label" for="checkShippable">The project is in a working, shippable state</label>
         </div>
       </div>
       <div class="modal-footer border-0">
-        <button
-          type="button"
-          class="btn btn-outline-secondary"
-          data-bs-dismiss="modal"
-        >
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
           Nevermind
         </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          id="finalSubmitBtn"
-          disabled
-        >
+        <button type="button" class="btn btn-primary" id="finalSubmitBtn" disabled>
           Submit
         </button>
       </div>
@@ -380,11 +233,26 @@ block head %}
 
 <footer class="py-4 bg-light text-center">
   <div class="container">
-    <span class="text-muted"
-      >This website is <a href="https://github.com">Open source!</a></span
-    >
+    <span class="text-muted">This website is <a href="https://github.com">Open source!</a></span>
   </div>
 </footer>
 
+<script>
+  async function copyShipLink() {
+    const linkText = document.getElementById('shipLinkText').innerText;
+    await navigator.clipboard.writeText(linkText);
+    alert('Ship Link copied to clipboard! Write this to your NFC chip.');
+  }
+
+  // Fetch profile to set ship link
+  fetch('/api/user/profile')
+    .then(r => r.json())
+    .then(data => {
+      if (data.ship_link) {
+        document.getElementById('shipLinkContainer').classList.remove('d-none');
+        document.getElementById('shipLinkText').innerText = data.ship_link;
+      }
+    });
+</script>
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

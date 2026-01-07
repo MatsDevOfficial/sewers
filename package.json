@@ -1,0 +1,19 @@
+{
+  "name": "sewers-ysws",
+  "version": "1.0.0",
+  "description": "Sewers YSWS Mobile App",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'No build step for Flask static files'",
+    "cap:sync": "cap sync",
+    "cap:open": "cap open"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/ios": "^6.0.0",
+    "@capacitor/android": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0"
+  }
+}

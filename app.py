@@ -26,7 +26,31 @@ admin_db.init_db()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    faqs = admin_db.get_all_faqs()
+    rewards = admin_db.get_all_rewards()
+    return render_template('index.html', faqs=faqs, rewards=rewards)
+
+@app.route('/s/<uuid_str>')
+def ship_redirect(uuid_str):
+    user = db.get_user_by_uuid(uuid_str)
+    if not user:
+        return render_template('unauthorized.html'), 404
+    
+    projects = db.get_user_projects(user['id'], status='Shipped')
+    if projects:
+        # Redirect to the most recent shipped project
+        return redirect(projects[0]['demo_link'])
+    
+    return redirect(f"/profile/{uuid_str}")
+
+@app.route('/profile/<uuid_str>')
+def public_profile(uuid_str):
+    user = db.get_user_by_uuid(uuid_str)
+    if not user:
+        return render_template('unauthorized.html'), 404
+    
+    projects = db.get_user_projects(user['id'])
+    return render_template('public_profile.html', user=user, projects=projects)
 
 @app.route('/login')
 def login():
@@ -200,6 +224,14 @@ def create_project():
         hackatime_project=data.get('hackatime_project')
     )
     
+    # Notify Slack
+    project = {
+        'title': data.get('title'),
+        'description': data.get('description'),
+        'slack_id': session['slack_id']
+    }
+    slack.project_created(project)
+    
     return jsonify({'success': True, 'project_id': project_id}), 201
 
 @app.route('/api/projects/<int:project_id>', methods=['GET'])
@@ -280,7 +312,8 @@ def get_user_profile():
     return jsonify({
         'user': user,
         'project_count': project_count,
-        'total_hours': total_hours
+        'total_hours': total_hours,
+        'ship_link': f"{request.url_root.rstrip('/')}/s/{user['ship_uuid']}" if user.get('ship_uuid') else None
     })
 
 @app.route('/api/user/profile', methods=['PUT'])
