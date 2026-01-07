@@ -420,7 +420,23 @@ def reject_project(project_id):
     if session['slack_id'] not in REVIEWER_EMAILS:
         return jsonify({'error': 'Unauthorized'}), 403
     
+    project = db.get_project_by_id(project_id)
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    
+    user = db.get_user_by_id(project['user_id'])
+    if user:
+        project['slack_id'] = user['slack_id']
+        project['nickname'] = user['nickname']
+    
+    data = request.get_json()
+    reason = data.get('reason', '') if data else ''
+    
     success = db.update_project_status(project_id, 'Building')
+    
+    if success:
+        slack.project_rejected(project, reason)
+        
     return jsonify({'success': success})
 
 if __name__ == '__main__':
