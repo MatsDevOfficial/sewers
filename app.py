@@ -473,4 +473,4 @@ def reject_project(project_id):
     return jsonify({'success': success})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=false)
