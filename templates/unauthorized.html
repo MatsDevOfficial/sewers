@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Unauthorized - Sewers{% endblock %}
+
+{% block content %}
+<div class="container d-flex flex-column align-items-center justify-content-center vh-100 text-center">
+    <div class="error-glow mb-4">
+        <i class="bi bi-shield-lock-fill" style="font-size: 5rem; color: var(--hc-primary);"></i>
+    </div>
+    <h1 class="display-4 fw-bold mb-3" style="color: var(--hc-primary);">ACCESS DENIED</h1>
+    <p class="lead mb-4">You don't have the clearance to enter this sector of the sewers.</p>
+    <div class="d-flex gap-3">
+        <a href="/" class="btn btn-primary px-4">Return Home</a>
+        <a href="/dash" class="btn btn-outline-primary px-4">Dashboard</a>
+    </div>
+
+    <div class="mt-5 p-3 rounded" style="background: rgba(0,0,0,0.2); border-left: 4px solid var(--hc-primary);">
+        <p class="mb-0 small text-muted">Error Code: 403 Forbidden</p>
+        <p class="mb-0 small text-muted">Required clearance: Admin or Reviewer</p>
+    </div>
+</div>
+
+<style>
+    .error-glow {
+        filter: drop-shadow(0 0 15px var(--hc-primary));
+    }
+</style>
+{% endblock %}

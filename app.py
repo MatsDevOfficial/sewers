@@ -44,7 +44,7 @@ def login_required(f):
         if 'user_id' not in session:
             if request.path.startswith('/api/'):
                 return jsonify({'error': 'Login required'}), 401
-            return redirect(url_for('login'))
+            return redirect(url_for('login', next=request.path))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -54,9 +54,11 @@ def admin_required(f):
         if 'user_id' not in session:
             if request.path.startswith('/api/'):
                 return jsonify({'error': 'Authentication required'}), 401
-            return redirect(url_for('login'))
+            return redirect(url_for('login', next=request.path))
         if session.get('email') not in ADMIN_EMAILS:
-            return jsonify({'error': 'Forbidden: Admin access only'}), 403
+            if request.path.startswith('/api/'):
+                return jsonify({'error': 'Forbidden: Admin access only'}), 403
+            return render_template('unauthorized.html'), 403
         return f(*args, **kwargs)
     return decorated_function
 
@@ -66,9 +68,11 @@ def reviewer_required(f):
         if 'user_id' not in session:
             if request.path.startswith('/api/'):
                 return jsonify({'error': 'Authentication required'}), 401
-            return redirect(url_for('login'))
+            return redirect(url_for('login', next=request.path))
         if session.get('email') not in REVIEWER_EMAILS:
-            return jsonify({'error': 'Forbidden: Reviewer access only'}), 403
+            if request.path.startswith('/api/'):
+                return jsonify({'error': 'Forbidden: Reviewer access only'}), 403
+            return render_template('unauthorized.html'), 403
         return f(*args, **kwargs)
     return decorated_function
 
@@ -103,6 +107,9 @@ def public_profile(uuid_str):
 @app.route('/login')
 def login():
     redirect_uri = get_redirect_uri()
+    next_url = request.args.get('next')
+    if next_url:
+        session['next_url'] = next_url
     
     auth_params = {
         'client_id': CLIENT_ID,
@@ -157,6 +164,10 @@ def auth_callback():
     session['slack_id'] = slack_id
     session['email'] = email
     session['nickname'] = nickname
+    
+    next_url = session.pop('next_url', None)
+    if next_url:
+        return redirect(next_url)
     
     return redirect(url_for('dashboard'))
 
