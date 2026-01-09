@@ -17,6 +17,20 @@ AUTH_URL = 'https://auth.hackclub.com/oauth/authorize'
 TOKEN_URL = 'https://auth.hackclub.com/oauth/token'
 JWKS_URL = 'https://auth.hackclub.com/oauth/discovery/keys'
 USERINFO_URL = 'https://auth.hackclub.com/oauth/userinfo'
+BASE_URL = os.getenv('BASE_URL')
+
+def get_redirect_uri():
+    if BASE_URL:
+        # Use BASE_URL if provided (e.g., https://sewers.onrender.com)
+        return BASE_URL.rstrip('/') + '/auth/callback'
+    
+    parsed = urlparse(request.url_root)
+    if parsed.hostname not in ['localhost', '127.0.0.1', '0.0.0.0']:
+        # Force HTTPS on Render if not localhost
+        return 'https://' + parsed.netloc.rstrip('/') + '/auth/callback'
+    
+    # Local development
+    return request.url_root.rstrip('/') + '/auth/callback'
 
 ADMIN_EMAILS = [email.strip() for email in os.getenv('ORGS', '').split(',') if email.strip()]
 REVIEWER_EMAILS = [email.strip() for email in os.getenv('ORGS', '').split(',') if email.strip()]
@@ -88,11 +102,7 @@ def public_profile(uuid_str):
 
 @app.route('/login')
 def login():
-    parsed = urlparse(request.url_root)
-    if parsed.hostname not in ['localhost', '127.0.0.1', '0.0.0.0']:
-        redirect_uri = 'https://' + parsed.netloc + '/auth/callback'
-    else:
-        redirect_uri = request.url_root.rstrip('/') + '/auth/callback'
+    redirect_uri = get_redirect_uri()
     
     auth_params = {
         'client_id': CLIENT_ID,
@@ -109,11 +119,7 @@ def auth_callback():
     if not code:
         return "Error: No code received", 400
 
-    parsed = urlparse(request.url_root)
-    if parsed.hostname not in ['localhost', '127.0.0.1', '0.0.0.0']:
-        redirect_uri = 'https://' + parsed.netloc + '/auth/callback'
-    else:
-        redirect_uri = request.url_root.rstrip('/') + '/auth/callback'
+    redirect_uri = get_redirect_uri()
     
     token_data = {
         'client_id': CLIENT_ID,
