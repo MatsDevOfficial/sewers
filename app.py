@@ -32,8 +32,8 @@ def get_redirect_uri():
     # Local development
     return request.url_root.rstrip('/') + '/auth/callback'
 
-ADMIN_EMAILS = [email.strip() for email in os.getenv('ORGS', '').split(',') if email.strip()]
-REVIEWER_EMAILS = [email.strip() for email in os.getenv('ORGS', '').split(',') if email.strip()]
+ADMIN_IDS = [sid.strip() for sid in os.getenv('ORGS', '').split(',') if sid.strip()]
+REVIEWER_IDS = [sid.strip() for sid in os.getenv('ORGS', '').split(',') if sid.strip()]
 
 db.init_db()
 admin_db.init_db()
@@ -55,7 +55,7 @@ def admin_required(f):
             if request.path.startswith('/api/'):
                 return jsonify({'error': 'Authentication required'}), 401
             return redirect(url_for('login', next=request.path))
-        if session.get('email') not in ADMIN_EMAILS:
+        if session.get('slack_id') not in ADMIN_IDS:
             if request.path.startswith('/api/'):
                 return jsonify({'error': 'Forbidden: Admin access only'}), 403
             return render_template('unauthorized.html'), 403
@@ -69,7 +69,7 @@ def reviewer_required(f):
             if request.path.startswith('/api/'):
                 return jsonify({'error': 'Authentication required'}), 401
             return redirect(url_for('login', next=request.path))
-        if session.get('email') not in REVIEWER_EMAILS:
+        if session.get('slack_id') not in REVIEWER_IDS:
             if request.path.startswith('/api/'):
                 return jsonify({'error': 'Forbidden: Reviewer access only'}), 403
             return render_template('unauthorized.html'), 403
@@ -274,7 +274,7 @@ def get_project(project_id):
     if not project:
         return jsonify({'error': 'Project not found'}), 404
     
-    if project['user_id'] != session['user_id'] and session.get('email') not in ADMIN_EMAILS:
+    if project['user_id'] != session['user_id'] and session.get('slack_id') not in ADMIN_IDS:
         return jsonify({'error': 'Forbidden: You do not have permission to view this project'}), 403
     
     return jsonify(project)
